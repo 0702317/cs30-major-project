@@ -1,10 +1,6 @@
-// Project Title
-// Your Name
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
-
+// Rubik's Cube Simlator/Solve Timer
+// Graham Lindsay
+// January 19th, 2025
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
