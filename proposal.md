@@ -8,10 +8,11 @@
 - Button to scramble the cube.
 - Display the scramble algorithm.
 - Solve timer at the top of the screen.
+- Music and sound effects for turning.
 
 ## Nice to Have
 - Multiple sizes of cubes.
 - Button to solve the cube.
-- Store previous times.
+- Store previous times in browser.
 - Show best time and averages.
 - 2d representation of the cube.
