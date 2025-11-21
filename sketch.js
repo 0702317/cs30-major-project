@@ -8,7 +8,7 @@ let piece;
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  piece = new Piece(0, 0, "corner", color(255, 255, 0));
+  piece = new ConstantSourceNode(0, 0, "corner", color(255, 255, 0));
 
   debugMode();
   angleMode(DEGREES);
@@ -41,18 +41,20 @@ class Piece {
   
   move() {
     
-    rotateY(45);
+    translate(100, 0, 0);
   }
 }
 
 class Edge extends Piece {
-  constructor() {
-  
+  constructor(x, y, color) {
+    super(x, y, color);
+    this.type = "edge";
   }
 }
 
 class Corner extends Piece {
-  constructor() {
-  
+  constructor(x, y, color) {
+    super(x, y, color);
+    this.type = "corner";
   }
 }
