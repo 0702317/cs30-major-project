@@ -25,27 +25,33 @@ function setup() {
 function draw() {
   background(100);
   for (let somePiece of cube) {
+    if (somePiece.y === 0) {
+      // let angle = frameCount * 0.5;
+      somePiece.yRotation = 180;
+    }
     somePiece.display();
   }
   orbitControl();
 }
 
 class Piece {
-  constructor(x, y, z) {
+  constructor(x, y, z, xRotation, yRotation, zRotation) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.xRotation = xRotation;
+    this.yRotation = yRotation;
+    this.zRotation = zRotation;
+    this.piece = buildGeometry(createPiece);
   }
 
   display() { // creates a piece made up of 6 different boxes of different colours that are offset to make each side of the piece a different colour.
     resetMatrix();
     translate(this.x, this.y, this.z);
-    piece = buildGeometry(createPiece);
-    model(piece);
-  }
-
-  turn() {
-
+    rotateX(this.xRotation);
+    rotateY(this.yRotation);
+    rotateZ(this.zRotation);
+    model(this.piece);
   }
 }
 
@@ -53,7 +59,7 @@ function generateCube() {
   for (let z = 0; z < cubeSize; z++) {
     for (let y = 0; y < cubeSize; y++) {
       for (let x = 0; x < cubeSize; x++) {
-        cube.push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize));
+        cube.push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
       }
     }
   }
