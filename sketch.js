@@ -12,7 +12,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   strokeWeight(4);
   generateCube();
-  // debugMode();
+  debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -25,10 +25,6 @@ function setup() {
 function draw() {
   background(100);
   for (let somePiece of cube) {
-    if (somePiece.y === 0) {
-      // let angle = frameCount * 0.5;
-      somePiece.yRotation = 180;
-    }
     somePiece.display();
   }
   orbitControl();
@@ -96,4 +92,39 @@ function createPiece() { // design for a piece
   fill("blue");
   box(pieceSize);
   pop();
+}
+
+function turnSide(side) {
+  for (let somePiece of cube) {
+    if (side === "U") {
+      if (somePiece.y === 0) {
+        somePiece.yRotation = 270;
+      }
+    }
+    if (side === "D") {
+      if (somePiece.y === 200) {
+        somePiece.yRotation = 90;
+      }
+    }
+    if (side === "F") {
+      if (somePiece.z === 200) {
+        somePiece.zRotation = 90;
+      }
+    }
+    if (side === "B") {
+      if (somePiece.z === 0) {
+        somePiece.zRotation = 270;
+      }
+    }
+    if (side === "L") {
+      if (somePiece.x === 0) {
+        somePiece.xRotation = 270;
+      }
+    }
+    if (side === "R") {
+      if (somePiece.x === 200) {
+        somePiece.xRotation = 90;
+      }
+    }
+  }
 }
