@@ -12,40 +12,32 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   strokeWeight(4);
   generateCube();
-  debugMode();
+  // debugMode();
   angleMode(DEGREES);
 
   // back face culling.
   drawingContext.enable(drawingContext.CULL_FACE);
   drawingContext.cullFace(drawingContext.FRONT);
 
-  camera(500, -500, 500, pieceSize, pieceSize, pieceSize, 0, 1, 0);
+  camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
 }
 
 function draw() {
   background(100);
+  orbitControl();
   for (let somePiece of cube) {
-    if (keyIsDown(85)) {
-      turnSide("U");
-    }
-    if (keyIsDown(68)) {
-      turnSide("D");
-    }
-    if (keyIsDown(70)) {
-      turnSide("F");
-    }
-    if (keyIsDown(66)) {
-      turnSide("B");
-    }
-    if (keyIsDown(76)) {
-      turnSide("L");
-    }
-    if (keyIsDown(82)) {
-      turnSide("R");
-    }
     somePiece.display();
   }
-  orbitControl();
+}
+
+function generateCube() {
+  for (let z = 0; z < cubeSize; z++) {
+    for (let y = 0; y < cubeSize; y++) {
+      for (let x = 0; x < cubeSize; x++) {
+        cube.push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+      }
+    }
+  }
 }
 
 class Piece {
@@ -59,25 +51,17 @@ class Piece {
     this.piece = buildGeometry(createPiece);
   }
 
-  display() { // creates a piece made up of 6 different boxes of different colours that are offset to make each side of the piece a different colour.
+  display() {
     resetMatrix();
-    translate(this.x, this.y, this.z);
     rotateX(this.xRotation);
     rotateY(this.yRotation);
     rotateZ(this.zRotation);
+    translate(this.x, this.y, this.z);
+    translate(-100, -100, -100);
     model(this.piece);
   }
 }
 
-function generateCube() {
-  for (let z = 0; z < cubeSize; z++) {
-    for (let y = 0; y < cubeSize; y++) {
-      for (let x = 0; x < cubeSize; x++) {
-        cube.push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
-      }
-    }
-  }
-}
 
 function createPiece() { // design for a piece
   push();
@@ -110,6 +94,27 @@ function createPiece() { // design for a piece
   fill("blue");
   box(pieceSize);
   pop();
+}
+
+function keyPressed() {
+  if (keyIsDown(85)) {
+    turnSide("U");
+  }
+  if (keyIsDown(68)) {
+    turnSide("D");
+  }
+  if (keyIsDown(70)) {
+    turnSide("F");
+  }
+  if (keyIsDown(66)) {
+    turnSide("B");
+  }
+  if (keyIsDown(76)) {
+    turnSide("L");
+  }
+  if (keyIsDown(82)) {
+    turnSide("R");
+  }
 }
 
 function turnSide(side) {
