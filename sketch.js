@@ -25,6 +25,24 @@ function setup() {
 function draw() {
   background(100);
   for (let somePiece of cube) {
+    if (keyIsDown(85)) {
+      turnSide("U");
+    }
+    if (keyIsDown(68)) {
+      turnSide("D");
+    }
+    if (keyIsDown(70)) {
+      turnSide("F");
+    }
+    if (keyIsDown(66)) {
+      turnSide("B");
+    }
+    if (keyIsDown(76)) {
+      turnSide("L");
+    }
+    if (keyIsDown(82)) {
+      turnSide("R");
+    }
     somePiece.display();
   }
   orbitControl();
@@ -98,32 +116,32 @@ function turnSide(side) {
   for (let somePiece of cube) {
     if (side === "U") {
       if (somePiece.y === 0) {
-        somePiece.yRotation = 270;
+        somePiece.yRotation += 270;
       }
     }
     if (side === "D") {
       if (somePiece.y === 200) {
-        somePiece.yRotation = 90;
+        somePiece.yRotation += 90;
       }
     }
     if (side === "F") {
       if (somePiece.z === 200) {
-        somePiece.zRotation = 90;
+        somePiece.zRotation += 90;
       }
     }
     if (side === "B") {
       if (somePiece.z === 0) {
-        somePiece.zRotation = 270;
+        somePiece.zRotation += 270;
       }
     }
     if (side === "L") {
       if (somePiece.x === 0) {
-        somePiece.xRotation = 270;
+        somePiece.xRotation += 270;
       }
     }
     if (side === "R") {
       if (somePiece.x === 200) {
-        somePiece.xRotation = 90;
+        somePiece.xRotation += 90;
       }
     }
   }
