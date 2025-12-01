@@ -156,7 +156,11 @@ function turnSide(side) {
 }
 
 function scramble() {
+  let scramble = "";
   for (let i = 0; i < 30; i++) {
-    turnSide(random(moves));
+    let side = random(moves);
+    turnSide(side);
+    scramble = scramble + side;
   }
+  console.log(scramble);
 }
