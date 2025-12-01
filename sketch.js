@@ -12,7 +12,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   strokeWeight(4);
   generateCube();
-  // debugMode();
+  debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -115,6 +115,9 @@ function keyPressed() {
   if (keyIsDown(82)) {
     turnSide("R");
   }
+  if (keyIsDown(32)) {
+    scramble();
+  }
 }
 
 function turnSide(side) {
@@ -149,5 +152,11 @@ function turnSide(side) {
         somePiece.xRotation += 90;
       }
     }
+  }
+}
+
+function scramble() {
+  for (let i = 0; i < 30; i++) {
+    turnSide(random(moves));
   }
 }
