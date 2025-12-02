@@ -6,7 +6,7 @@ let cube = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
-let moves = ["U", "D", "F", "B", "L", "R"];
+let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -20,6 +20,8 @@ function setup() {
   drawingContext.cullFace(drawingContext.FRONT);
 
   camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
+
+  // scramble();
 }
 
 function draw() {
@@ -45,6 +47,7 @@ class Piece {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.pos = createVector(this.x, this.y, this.z);
     this.xRotation = xRotation;
     this.yRotation = yRotation;
     this.zRotation = zRotation;
@@ -59,6 +62,24 @@ class Piece {
     translate(this.x, this.y, this.z);
     translate(-100, -100, -100);
     model(this.piece);
+  }
+}
+
+class Cube {
+  constructor() {
+
+  }
+
+  generateCube() {
+
+  }
+
+  turnSide() {
+
+  }
+
+  display() {
+
   }
 }
 
@@ -115,7 +136,7 @@ function keyPressed() {
   if (keyIsDown(82)) {
     turnSide("R");
   }
-  if (keyIsDown(32)) {
+  if (keyIsDown(83)) {
     scramble();
   }
 }
@@ -152,6 +173,36 @@ function turnSide(side) {
         somePiece.xRotation += 90;
       }
     }
+    if (side === "U'") {
+      if (somePiece.y === 0) {
+        somePiece.yRotation += 90;
+      }
+    }
+    if (side === "D'") {
+      if (somePiece.y === 200) {
+        somePiece.yRotation += 270;
+      }
+    }
+    if (side === "F'") {
+      if (somePiece.z === 200) {
+        somePiece.zRotation += 270;
+      }
+    }
+    if (side === "B'") {
+      if (somePiece.z === 0) {
+        somePiece.zRotation += 90;
+      }
+    }
+    if (side === "L'") {
+      if (somePiece.x === 0) {
+        somePiece.xRotation += 90;
+      }
+    }
+    if (side === "R'") {
+      if (somePiece.x === 200) {
+        somePiece.xRotation += 270;
+      }
+    }
   }
 }
 
@@ -160,7 +211,7 @@ function scramble() {
   for (let i = 0; i < 30; i++) {
     let side = random(moves);
     turnSide(side);
-    scramble = scramble + side;
+    scramble = scramble + side + " ";
   }
   console.log(scramble);
 }
