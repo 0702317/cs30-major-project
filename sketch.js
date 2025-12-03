@@ -56,12 +56,16 @@ class Piece {
 
   display() {
     resetMatrix();
-    rotateX(this.xRotation);
-    rotateY(this.yRotation);
-    rotateZ(this.zRotation);
+    this.rotate();
     translate(this.x, this.y, this.z);
     translate(-100, -100, -100);
     model(this.piece);
+  }
+
+  rotate() {
+    rotateX(this.xRotation);
+    rotateY(this.yRotation);
+    rotateZ(this.zRotation);
   }
 }
 
