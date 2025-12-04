@@ -12,7 +12,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   strokeWeight(4);
   generateCube();
-  debugMode();
+  // debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -52,6 +52,10 @@ class Piece {
     this.yRotation = yRotation;
     this.zRotation = zRotation;
     this.piece = buildGeometry(createPiece);
+  }
+
+  update() {
+
   }
 
   display() {
@@ -145,6 +149,7 @@ function keyPressed() {
   }
 }
 
+// turn a specific side.
 function turnSide(side) {
   for (let somePiece of cube) {
     if (side === "U") {
@@ -210,6 +215,8 @@ function turnSide(side) {
   }
 }
 
+
+// scramble the cube.
 function scramble() {
   let scramble = "";
   for (let i = 0; i < 30; i++) {
