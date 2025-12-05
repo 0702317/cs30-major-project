@@ -2,7 +2,8 @@
 // Graham Lindsay
 // January 19th, 2025
 
-let cube = [];
+let cube;
+let cubeArray = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
@@ -10,8 +11,8 @@ let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  strokeWeight(4);
-  generateCube();
+
+  strokeWeight(6);
   // debugMode();
   angleMode(DEGREES);
 
@@ -21,25 +22,15 @@ function setup() {
 
   camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
 
-  // scramble();
+  cube = new Cube(cubeSize);
+  cube.generateCube();
+  // cube.scramble();
 }
 
 function draw() {
   background(100);
   orbitControl();
-  for (let somePiece of cube) {
-    somePiece.display();
-  }
-}
-
-function generateCube() {
-  for (let z = 0; z < cubeSize; z++) {
-    for (let y = 0; y < cubeSize; y++) {
-      for (let x = 0; x < cubeSize; x++) {
-        cube.push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
-      }
-    }
-  }
+  cube.display();
 }
 
 class Piece {
@@ -47,82 +38,92 @@ class Piece {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.pos = createVector(this.x, this.y, this.z);
     this.xRotation = xRotation;
     this.yRotation = yRotation;
     this.zRotation = zRotation;
-    this.piece = buildGeometry(createPiece);
+    this.piece = buildGeometry(this.createPiece);
   }
 
-  update() {
-
-  }
-
-  display() {
+  display() { // display the piece and perform rotations & translations.
     resetMatrix();
-    this.rotate();
+    rotateX(this.xRotation);
+    rotateY(this.yRotation);
+    rotateZ(this.zRotation);
     translate(this.x, this.y, this.z);
     translate(-100, -100, -100);
     model(this.piece);
   }
 
-  rotate() {
-    rotateX(this.xRotation);
-    rotateY(this.yRotation);
-    rotateZ(this.zRotation);
+  createPiece() { // create the design for a single piece.
+    push();
+    translate(0, -3, 0);
+    fill("white");
+    box(pieceSize);
+    pop();
+    push();
+    translate(0, 3, 0);
+    fill("yellow");
+    box(pieceSize);
+    pop();
+    push();
+    translate(3, 0, 0);
+    fill("orange");
+    box(pieceSize);
+    pop();
+    push();
+    translate(-3, 0, 0);
+    fill("red");
+    box(pieceSize);
+    pop();
+    push();
+    translate(0, 0, 3);
+    fill("green");
+    box(pieceSize);
+    pop();
+    push();
+    translate(0, 0, -3);
+    fill("blue");
+    box(pieceSize);
+    pop();
   }
 }
 
 class Cube {
-  constructor() {
-
+  constructor(cubeSize) {
+    this.cubeSize = cubeSize;
   }
 
   generateCube() {
-
-  }
-
-  turnSide() {
-
+    for (let z = 0; z < this.cubeSize; z++) {
+      cubeArray.push([]);
+      for (let y = 0; y < this.cubeSize; y++) {
+        cubeArray[z].push([]);
+        for (let x = 0; x < this.cubeSize; x++) {
+          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+        }
+      }
+    }
   }
 
   display() {
-
+    for (let z = 0; z < this.cubeSize; z++) {
+      for (let y = 0; y < this.cubeSize; y++) {
+        for (let x = 0; x < this.cubeSize; x++) {
+          cubeArray[z][y][x].display();
+        }
+      }
+    }
   }
-}
 
-
-function createPiece() { // design for a piece
-  push();
-  translate(0, -3, 0);
-  fill("white");
-  box(pieceSize);
-  pop();
-  push();
-  translate(0, 3, 0);
-  fill("yellow");
-  box(pieceSize);
-  pop();
-  push();
-  translate(3, 0, 0);
-  fill("orange");
-  box(pieceSize);
-  pop();
-  push();
-  translate(-3, 0, 0);
-  fill("red");
-  box(pieceSize);
-  pop();
-  push();
-  translate(0, 0, 3);
-  fill("green");
-  box(pieceSize);
-  pop();
-  push();
-  translate(0, 0, -3);
-  fill("blue");
-  box(pieceSize);
-  pop();
+  scramble() {
+    let scramble = "";
+    for (let i = 0; i < 30; i++) {
+      let side = random(moves);
+      turnSide(side);
+      scramble = scramble + side + " ";
+    }
+    console.log(scramble);
+  }
 }
 
 function keyPressed() {
@@ -145,84 +146,52 @@ function keyPressed() {
     turnSide("R");
   }
   if (keyIsDown(83)) {
-    scramble();
+    cube.scramble();
   }
 }
 
 // turn a specific side.
 function turnSide(side) {
-  for (let somePiece of cube) {
-    if (side === "U") {
-      if (somePiece.y === 0) {
-        somePiece.yRotation += 270;
-      }
-    }
-    if (side === "D") {
-      if (somePiece.y === 200) {
-        somePiece.yRotation += 90;
-      }
-    }
-    if (side === "F") {
-      if (somePiece.z === 200) {
-        somePiece.zRotation += 90;
-      }
-    }
-    if (side === "B") {
-      if (somePiece.z === 0) {
-        somePiece.zRotation += 270;
-      }
-    }
-    if (side === "L") {
-      if (somePiece.x === 0) {
-        somePiece.xRotation += 270;
-      }
-    }
-    if (side === "R") {
-      if (somePiece.x === 200) {
-        somePiece.xRotation += 90;
-      }
-    }
-    if (side === "U'") {
-      if (somePiece.y === 0) {
-        somePiece.yRotation += 90;
-      }
-    }
-    if (side === "D'") {
-      if (somePiece.y === 200) {
-        somePiece.yRotation += 270;
-      }
-    }
-    if (side === "F'") {
-      if (somePiece.z === 200) {
-        somePiece.zRotation += 270;
-      }
-    }
-    if (side === "B'") {
-      if (somePiece.z === 0) {
-        somePiece.zRotation += 90;
-      }
-    }
-    if (side === "L'") {
-      if (somePiece.x === 0) {
-        somePiece.xRotation += 90;
-      }
-    }
-    if (side === "R'") {
-      if (somePiece.x === 200) {
-        somePiece.xRotation += 270;
+  for (let z = 0; z < cubeSize; z++) {
+    for (let y = 0; y < cubeSize; y++) {
+      for (let x = 0; x < cubeSize; x++) {
+        let somePiece = cubeArray[z][y][x];
+        if (side === "U") {
+          if (somePiece.y === 0) {
+            somePiece.yRotation += 270;
+          }
+        }
+        if (side === "D") {
+          if (somePiece.y === 200) {
+            somePiece.yRotation += 90;
+          }
+        }
+        if (side === "F") {
+          if (somePiece.z === 200) {
+            somePiece.zRotation += 90;
+          }
+        }
+        if (side === "B") {
+          if (somePiece.z === 0) {
+            somePiece.zRotation += 270;
+          }
+        }
+        if (side === "L") {
+          if (somePiece.x === 0) {
+            somePiece.xRotation += 270;
+          }
+        }
+        if (side === "R") {
+          if (somePiece.x === 200) {
+            somePiece.xRotation += 90;
+          }
+        }
+        if (side === "U'") {
+          if (somePiece.y === 0) {
+            somePiece.yRotation += 90;
+          }
+        }
       }
     }
   }
-}
-
-
-// scramble the cube.
-function scramble() {
-  let scramble = "";
-  for (let i = 0; i < 30; i++) {
-    let side = random(moves);
-    turnSide(side);
-    scramble = scramble + side + " ";
-  }
-  console.log(scramble);
 }
