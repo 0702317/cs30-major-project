@@ -13,7 +13,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   strokeWeight(6);
-  // debugMode();
+  debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -34,10 +34,13 @@ function draw() {
 }
 
 class Piece {
-  constructor(x, y, z, xRotation, yRotation, zRotation) {
+  constructor(x, y, z, xTranslation, yTranslation, zTranslation, xRotation, yRotation, zRotation) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.xTranslation = xTranslation;
+    this.yTranslation = yTranslation;
+    this.zTranslation = zTranslation;
     this.xRotation = xRotation;
     this.yRotation = yRotation;
     this.zRotation = zRotation;
@@ -49,7 +52,7 @@ class Piece {
     rotateX(this.xRotation);
     rotateY(this.yRotation);
     rotateZ(this.zRotation);
-    translate(this.x, this.y, this.z);
+    translate(this.xTranslation, this.yTranslation, this.zTranslation);
     translate(-100, -100, -100);
     model(this.piece);
   }
@@ -99,7 +102,7 @@ class Cube {
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
         for (let x = 0; x < this.cubeSize; x++) {
-          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
         }
       }
     }
@@ -158,6 +161,19 @@ function turnSide(side) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
+            if (somePiece.z === 0) {
+              somePiece.z = somePiece.x;
+              somePiece.x = 200;
+            }
+            else if (somePiece.z === 100) {
+              somePiece.z = somePiece.x;
+              somePiece.x = 100;
+            }
+            else if (somePiece.z === 200) {
+              somePiece.z = somePiece.x;
+              somePiece.x = 0;
+            }
+
             somePiece.yRotation += 270;
           }
         }
