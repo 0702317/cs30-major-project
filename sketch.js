@@ -8,6 +8,7 @@ let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
 let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
+let pieceLocations = new Map();
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -21,6 +22,16 @@ function setup() {
   drawingContext.cullFace(drawingContext.FRONT);
 
   camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
+
+  pieceLocations.set(0, 2);
+  pieceLocations.set(1, 5);
+  pieceLocations.set(2, 8);
+  pieceLocations.set(3, 1);
+  pieceLocations.set(4, 4);
+  pieceLocations.set(5, 6);
+  pieceLocations.set(6, 0);
+  pieceLocations.set(7, 3);
+  pieceLocations.set(8, 6);
 
   cube = new Cube(cubeSize);
   cube.generateCube();
@@ -161,18 +172,8 @@ function turnSide(side) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
-            if (somePiece.z === 0) {
-              somePiece.z = somePiece.x;
-              somePiece.x = 200;
-            }
-            else if (somePiece.z === 100) {
-              somePiece.z = somePiece.x;
-              somePiece.x = 100;
-            }
-            else if (somePiece.z === 200) {
-              somePiece.z = somePiece.x;
-              somePiece.x = 0;
-            }
+            
+            console.log(pieceLocations.get(z * x));
 
             somePiece.yRotation += 270;
           }
