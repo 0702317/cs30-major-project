@@ -9,6 +9,9 @@ let cubeSize = 3;
 let pieceSize = 300/cubeSize;
 let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 let pieceLocations = new Map();
+let xPositions = new Map();
+let yPositions = new Map();
+let zPositions = new Map();
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -28,7 +31,7 @@ function setup() {
   pieceLocations.set(2, 8);
   pieceLocations.set(3, 1);
   pieceLocations.set(4, 4);
-  pieceLocations.set(5, 6);
+  pieceLocations.set(5, 7);
   pieceLocations.set(6, 0);
   pieceLocations.set(7, 3);
   pieceLocations.set(8, 6);
@@ -56,6 +59,14 @@ class Piece {
     this.yRotation = yRotation;
     this.zRotation = zRotation;
     this.piece = buildGeometry(this.createPiece);
+  }
+
+  update(count) {
+    count = pieceLocations.get(count);
+    this.x = xPositions.get(count);
+    console.log(xPositions);
+    console.log(zPositions);
+
   }
 
   display() { // display the piece and perform rotations & translations.
@@ -109,12 +120,16 @@ class Cube {
 
   generateCube() {
     for (let z = 0; z < this.cubeSize; z++) {
+      let count = 0;
       cubeArray.push([]);
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
         for (let x = 0; x < this.cubeSize; x++) {
           cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          xPositions.set(count, x * pieceSize);
+          count++;
         }
+        count++;
       }
     }
   }
@@ -166,16 +181,16 @@ function keyPressed() {
 
 // turn a specific side.
 function turnSide(side) {
+  let count = 0;
   for (let z = 0; z < cubeSize; z++) {
     for (let y = 0; y < cubeSize; y++) {
       for (let x = 0; x < cubeSize; x++) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
-            
-            console.log(pieceLocations.get(z * x));
-
+            somePiece.update(count);
             somePiece.yRotation += 270;
+            count++;
           }
         }
         if (side === "D") {
