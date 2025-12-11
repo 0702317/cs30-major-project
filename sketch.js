@@ -12,6 +12,12 @@ let pieceLocations = new Map();
 let xPositions = new Map();
 let yPositions = new Map();
 let zPositions = new Map();
+let timer = 0;
+let arial;
+
+function preload() {
+  arial = loadFont("ARIALBD.TTF");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -25,6 +31,10 @@ function setup() {
   drawingContext.cullFace(drawingContext.FRONT);
 
   camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
+
+  textFont(arial);
+  textSize(100);
+  textAlign(CENTER, TOP);
 
   pieceLocations.set(0, 2);
   pieceLocations.set(1, 5);
@@ -45,6 +55,7 @@ function draw() {
   background(100);
   orbitControl();
   cube.display();
+  startTimer();
 }
 
 class Piece {
@@ -65,7 +76,6 @@ class Piece {
     count = pieceLocations.get(count);
     this.x = xPositions.get(count);
     console.log(xPositions);
-    console.log(zPositions);
 
   }
 
@@ -155,6 +165,50 @@ class Cube {
   }
 }
 
+function startTimer() {
+  if (keyIsDown(32)) {
+    timer++;
+    if (timer <= 80) {
+      push();
+      resetMatrix();
+      translate(0, -400, 0);
+      text("3", 0, 0);
+      pop();
+    }
+    else if (timer <= 160) {
+      push();
+      resetMatrix();
+      translate(0, -400, 0);
+      text("2", 0, 0);
+      pop();
+    }
+    else if (timer <= 240) {
+      push();
+      resetMatrix();
+      translate(0, -400, 0);
+      text("1", 0, 0);
+      pop();
+    }
+    else if (timer <= 320) {
+      push();
+      resetMatrix();
+      translate(0, -400, 0);
+      text("GO!", 0, 0);
+      pop();
+    }
+    else {
+      push();
+      resetMatrix();
+      translate(0, -400, 0);
+      text("", 0, 0);
+      pop();
+    }
+  }
+  else {
+    timer = 0;
+  }
+}
+
 function keyPressed() {
   if (keyIsDown(85)) {
     turnSide("U");
@@ -181,16 +235,13 @@ function keyPressed() {
 
 // turn a specific side.
 function turnSide(side) {
-  let count = 0;
   for (let z = 0; z < cubeSize; z++) {
     for (let y = 0; y < cubeSize; y++) {
       for (let x = 0; x < cubeSize; x++) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
-            somePiece.update(count);
             somePiece.yRotation += 270;
-            count++;
           }
         }
         if (side === "D") {
