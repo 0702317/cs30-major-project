@@ -7,16 +7,14 @@ let cubeArray = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
+let turns = 0;
 let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 let pieceLocations = new Map();
-let xPositions = new Map();
-let yPositions = new Map();
-let zPositions = new Map();
 let timer = 0;
-let arial;
+let font;
 
 function preload() {
-  arial = loadFont("ARIALBD.TTF");
+  font = loadFont("ARIALBD.TTF");
 }
 
 function setup() {
@@ -32,7 +30,7 @@ function setup() {
 
   camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
 
-  textFont(arial);
+  textFont(font);
   textSize(100);
   textAlign(CENTER, TOP);
 
@@ -74,8 +72,6 @@ class Piece {
 
   update(count) {
     count = pieceLocations.get(count);
-    this.x = xPositions.get(count);
-    console.log(xPositions);
 
   }
 
@@ -130,16 +126,12 @@ class Cube {
 
   generateCube() {
     for (let z = 0; z < this.cubeSize; z++) {
-      let count = 0;
       cubeArray.push([]);
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
         for (let x = 0; x < this.cubeSize; x++) {
           cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
-          xPositions.set(count, x * pieceSize);
-          count++;
         }
-        count++;
       }
     }
   }
@@ -169,39 +161,29 @@ function startTimer() {
   if (keyIsDown(32)) {
     timer++;
     if (timer <= 80) {
-      push();
       resetMatrix();
       translate(0, -400, 0);
       text("3", 0, 0);
-      pop();
     }
     else if (timer <= 160) {
-      push();
       resetMatrix();
       translate(0, -400, 0);
       text("2", 0, 0);
-      pop();
     }
     else if (timer <= 240) {
-      push();
       resetMatrix();
       translate(0, -400, 0);
       text("1", 0, 0);
-      pop();
     }
     else if (timer <= 320) {
-      push();
       resetMatrix();
       translate(0, -400, 0);
       text("GO!", 0, 0);
-      pop();
     }
     else {
-      push();
       resetMatrix();
       translate(0, -400, 0);
       text("", 0, 0);
-      pop();
     }
   }
   else {
@@ -241,7 +223,7 @@ function turnSide(side) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
-            somePiece.yRotation += 270;
+            
           }
         }
         if (side === "D") {
@@ -267,11 +249,6 @@ function turnSide(side) {
         if (side === "R") {
           if (somePiece.x === 200) {
             somePiece.xRotation += 90;
-          }
-        }
-        if (side === "U'") {
-          if (somePiece.y === 0) {
-            somePiece.yRotation += 90;
           }
         }
       }
