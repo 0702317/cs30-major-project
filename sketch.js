@@ -9,9 +9,8 @@ let cubeSize = 3;
 let pieceSize = 300/cubeSize;
 let turns = 0;
 let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
-let pieceLocations = new Map();
-let timer = 0;
 let font;
+let cam;
 
 function preload() {
   font = loadFont("ARIALBD.TTF");
@@ -33,17 +32,7 @@ function setup() {
   textFont(font);
   textSize(100);
   textAlign(CENTER, TOP);
-
-  pieceLocations.set(0, 2);
-  pieceLocations.set(1, 5);
-  pieceLocations.set(2, 8);
-  pieceLocations.set(3, 1);
-  pieceLocations.set(4, 4);
-  pieceLocations.set(5, 7);
-  pieceLocations.set(6, 0);
-  pieceLocations.set(7, 3);
-  pieceLocations.set(8, 6);
-
+  
   cube = new Cube(cubeSize);
   cube.generateCube();
   // cube.scramble();
@@ -53,7 +42,7 @@ function draw() {
   background(100);
   orbitControl();
   cube.display();
-  startTimer();
+  cube.startTimer();
 }
 
 class Piece {
@@ -68,11 +57,6 @@ class Piece {
     this.yRotation = yRotation;
     this.zRotation = zRotation;
     this.piece = buildGeometry(this.createPiece);
-  }
-
-  update(count) {
-    count = pieceLocations.get(count);
-
   }
 
   display() { // display the piece and perform rotations & translations.
@@ -122,6 +106,7 @@ class Piece {
 class Cube {
   constructor(cubeSize) {
     this.cubeSize = cubeSize;
+    this.timer = 0;
   }
 
   generateCube() {
@@ -154,42 +139,44 @@ class Cube {
       scramble = scramble + side + " ";
     }
     console.log(scramble);
+    // resetMatrix();
+    // translate(0 -400, 0);
+    // text("Scramble: " + scramble, 0, 0);
+  }
+
+  startTimer() {
+    resetMatrix();
+    rotateY(180);
+
+    if (keyIsDown(32)) {
+      this.timer++;
+      if (this.timer <= 80) {
+        translate(0, -400, 0);
+        text("3", 0, 0);
+      }
+      else if (this.timer <= 160) {
+        translate(0, -400, 0);
+        text("2", 0, 0);
+      }
+      else if (this.timer <= 240) {
+        translate(0, -400, 0);
+        text("1", 0, 0);
+      }
+      else if (this.timer <= 320) {
+        translate(0, -400, 0);
+        text("GO!", 0, 0);
+      }
+      else {
+        translate(0, -400, 0);
+        text("", 0, 0);
+      }
+    }
+    else {
+      this.timer = 0;
+    }
   }
 }
 
-function startTimer() {
-  if (keyIsDown(32)) {
-    timer++;
-    if (timer <= 80) {
-      resetMatrix();
-      translate(0, -400, 0);
-      text("3", 0, 0);
-    }
-    else if (timer <= 160) {
-      resetMatrix();
-      translate(0, -400, 0);
-      text("2", 0, 0);
-    }
-    else if (timer <= 240) {
-      resetMatrix();
-      translate(0, -400, 0);
-      text("1", 0, 0);
-    }
-    else if (timer <= 320) {
-      resetMatrix();
-      translate(0, -400, 0);
-      text("GO!", 0, 0);
-    }
-    else {
-      resetMatrix();
-      translate(0, -400, 0);
-      text("", 0, 0);
-    }
-  }
-  else {
-    timer = 0;
-  }
-}
 
 function keyPressed() {
   if (keyIsDown(85)) {
@@ -223,7 +210,7 @@ function turnSide(side) {
         let somePiece = cubeArray[z][y][x];
         if (side === "U") {
           if (somePiece.y === 0) {
-            
+            somePiece.yRotation -= 90;
           }
         }
         if (side === "D") {
@@ -238,12 +225,12 @@ function turnSide(side) {
         }
         if (side === "B") {
           if (somePiece.z === 0) {
-            somePiece.zRotation += 270;
+            somePiece.zRotation -= 90;
           }
         }
         if (side === "L") {
           if (somePiece.x === 0) {
-            somePiece.xRotation += 270;
+            somePiece.xRotation -= 90;
           }
         }
         if (side === "R") {
