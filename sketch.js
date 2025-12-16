@@ -4,6 +4,7 @@
 
 let cube;
 let cubeArray = [];
+let c = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
@@ -119,8 +120,79 @@ class Cube {
         }
       }
     }
+
+    for (let z = 0; z < this.cubeSize; z++) {
+      for (let y = 0; y < this.cubeSize; y++) {
+        for (let x = 0; x < this.cubeSize; x++) {
+          c.push(new Piece(x, y, z, x, y, z, 0, 0, 0));
+        }
+      }
+    }
+
   }
 
+  turnSide(side) {
+    for (let z = 0; z < cubeSize; z++) {
+      for (let y = 0; y < cubeSize; y++) {
+        for (let x = 0; x < cubeSize; x++) {
+          let somePiece = cubeArray[z][y][x];
+          // if (side === "U") {
+          //   if (somePiece.y === 0) {
+          //     somePiece.yRotation -= 90;
+          //   }
+          // }
+          if (side === "D") {
+            if (somePiece.y === 200) {
+              somePiece.yRotation += 90;
+            }
+          }
+          else if (side === "F") {
+            if (somePiece.z === 200) {
+              somePiece.zRotation += 90;
+            }
+          }
+          else if (side === "B") {
+            if (somePiece.z === 0) {
+              somePiece.zRotation -= 90;
+            }
+          }
+          else if (side === "L") {
+            if (somePiece.x === 0) {
+              somePiece.xRotation -= 90;
+            }
+          }
+          else if (side === "R") {
+            if (somePiece.x === 200) {
+              somePiece.xRotation += 90;
+            }
+          }
+        }
+      }
+    }
+    // experimenting with method from https://www.youtube.com/watch?v=W24xhB9PO54
+    for (let piece of c) {
+      if (side === "U") {
+        if (piece.y === 0) {
+          [piece.z, piece.x] = [-(piece.y-(cubeSize-1)/2)+(cubeSize-1)/2, piece.x];
+          piece.yRotation -= 90;
+        }
+      }
+    }
+  }
+  
+  scramble() {
+    let scramble = "";
+    for (let i = 0; i < 30; i++) {
+      let side = random(moves);
+      this.turnSide(side);
+      scramble = scramble + side + " ";
+    }
+    console.log(scramble);
+    // resetMatrix();
+    // translate(0 -400, 0);
+    // text("Scramble: " + scramble, 0, 0);
+  }
+  
   display() {
     for (let z = 0; z < this.cubeSize; z++) {
       for (let y = 0; y < this.cubeSize; y++) {
@@ -129,19 +201,6 @@ class Cube {
         }
       }
     }
-  }
-
-  scramble() {
-    let scramble = "";
-    for (let i = 0; i < 30; i++) {
-      let side = random(moves);
-      turnSide(side);
-      scramble = scramble + side + " ";
-    }
-    console.log(scramble);
-    // resetMatrix();
-    // translate(0 -400, 0);
-    // text("Scramble: " + scramble, 0, 0);
   }
 
   startTimer() {
@@ -177,68 +236,26 @@ class Cube {
   }
 }
 
-
 function keyPressed() {
   if (keyIsDown(85)) {
-    turnSide("U");
+    cube.turnSide("U");
   }
   if (keyIsDown(68)) {
-    turnSide("D");
+    cube.turnSide("D");
   }
   if (keyIsDown(70)) {
-    turnSide("F");
+    cube.turnSide("F");
   }
   if (keyIsDown(66)) {
-    turnSide("B");
+    cube.turnSide("B");
   }
   if (keyIsDown(76)) {
-    turnSide("L");
+    cube.turnSide("L");
   }
   if (keyIsDown(82)) {
-    turnSide("R");
+    cube.turnSide("R");
   }
   if (keyIsDown(83)) {
     cube.scramble();
-  }
-}
-
-// turn a specific side.
-function turnSide(side) {
-  for (let z = 0; z < cubeSize; z++) {
-    for (let y = 0; y < cubeSize; y++) {
-      for (let x = 0; x < cubeSize; x++) {
-        let somePiece = cubeArray[z][y][x];
-        if (side === "U") {
-          if (somePiece.y === 0) {
-            somePiece.yRotation -= 90;
-          }
-        }
-        if (side === "D") {
-          if (somePiece.y === 200) {
-            somePiece.yRotation += 90;
-          }
-        }
-        if (side === "F") {
-          if (somePiece.z === 200) {
-            somePiece.zRotation += 90;
-          }
-        }
-        if (side === "B") {
-          if (somePiece.z === 0) {
-            somePiece.zRotation -= 90;
-          }
-        }
-        if (side === "L") {
-          if (somePiece.x === 0) {
-            somePiece.xRotation -= 90;
-          }
-        }
-        if (side === "R") {
-          if (somePiece.x === 200) {
-            somePiece.xRotation += 90;
-          }
-        }
-      }
-    }
   }
 }
