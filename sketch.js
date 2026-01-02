@@ -136,11 +136,11 @@ class Cube {
       for (let y = 0; y < cubeSize; y++) {
         for (let x = 0; x < cubeSize; x++) {
           let somePiece = cubeArray[z][y][x];
-          // if (side === "U") {
-          //   if (somePiece.y === 0) {
-          //     somePiece.yRotation -= 90;
-          //   }
-          // }
+          if (side === "U") {
+            if (somePiece.y === 0) {
+              somePiece.yRotation -= 90;
+            }
+          }
           if (side === "D") {
             if (somePiece.y === 200) {
               somePiece.yRotation += 90;
