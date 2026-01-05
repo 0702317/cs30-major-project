@@ -169,15 +169,6 @@ class Cube {
         }
       }
     }
-    // experimenting with method from https://www.youtube.com/watch?v=W24xhB9PO54
-    for (let piece of c) {
-      if (side === "U") {
-        if (piece.y === 0) {
-          [piece.z, piece.x] = [-(piece.y-(cubeSize-1)/2)+(cubeSize-1)/2, piece.x];
-          piece.yRotation -= 90;
-        }
-      }
-    }
   }
   
   scramble() {
