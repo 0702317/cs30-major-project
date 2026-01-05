@@ -4,14 +4,14 @@
 
 let cube;
 let cubeArray = [];
-let c = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
-let turns = 0;
 let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 let font;
 let cam;
+
+const MATRIX = new Matrix([3, 3], 2);
 
 function preload() {
   font = loadFont("ARIALBD.TTF");
@@ -36,7 +36,9 @@ function setup() {
   
   cube = new Cube(cubeSize);
   cube.generateCube();
-  // cube.scramble();
+  // cube.scramble()
+
+  MATRIX.setRow(0, new Vec(2));
 }
 
 function draw() {
@@ -120,15 +122,6 @@ class Cube {
         }
       }
     }
-
-    for (let z = 0; z < this.cubeSize; z++) {
-      for (let y = 0; y < this.cubeSize; y++) {
-        for (let x = 0; x < this.cubeSize; x++) {
-          c.push(new Piece(x, y, z, x, y, z, 0, 0, 0));
-        }
-      }
-    }
-
   }
 
   turnSide(side) {
