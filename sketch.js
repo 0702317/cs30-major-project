@@ -11,8 +11,6 @@ let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
 let font;
 let cam;
 
-const MATRIX = new Matrix([3, 3], 2);
-
 function preload() {
   font = loadFont("ARIALBD.TTF");
 }
@@ -35,10 +33,8 @@ function setup() {
   textAlign(CENTER, TOP);
   
   cube = new Cube(cubeSize);
-  cube.generateCube();
+  cube.generate();
   // cube.scramble()
-
-  MATRIX.setRow(0, new Vec(2));
 }
 
 function draw() {
@@ -70,6 +66,7 @@ class Piece {
     translate(this.xTranslation, this.yTranslation, this.zTranslation);
     translate(-100, -100, -100);
     model(this.piece);
+    
   }
 
   createPiece() { // create the design for a single piece.
@@ -112,13 +109,29 @@ class Cube {
     this.timer = 0;
   }
 
-  generateCube() {
+  generate() {
     for (let z = 0; z < this.cubeSize; z++) {
       cubeArray.push([]);
+      let zMatrix = new Matrix([this.cubeSize, this.cubeSize]);
+      zMatrix.setRow(z, z);
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
+        let yMatrix = new Matrix([this.cubeSize, this.cubeSize]);
+        yMatrix.setRow(y, y);
         for (let x = 0; x < this.cubeSize; x++) {
-          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          let xMatrix = new Matrix([this.cubeSize, this.cubeSize]);
+          xMatrix.setRow(x, x);
+          cubeArray[z][y].push(new Piece(xMatrix, yMatrix, zMatrix, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+        }
+      }
+    }
+  }
+  
+  display() {
+    for (let z = 0; z < this.cubeSize; z++) {
+      for (let y = 0; y < this.cubeSize; y++) {
+        for (let x = 0; x < this.cubeSize; x++) {
+          cubeArray[z][y][x].display();
         }
       }
     }
@@ -177,15 +190,6 @@ class Cube {
     // text("Scramble: " + scramble, 0, 0);
   }
   
-  display() {
-    for (let z = 0; z < this.cubeSize; z++) {
-      for (let y = 0; y < this.cubeSize; y++) {
-        for (let x = 0; x < this.cubeSize; x++) {
-          cubeArray[z][y][x].display();
-        }
-      }
-    }
-  }
 
   startTimer() {
     resetMatrix();
