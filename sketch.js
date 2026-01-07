@@ -112,16 +112,15 @@ class Cube {
   generate() {
     for (let z = 0; z < this.cubeSize; z++) {
       cubeArray.push([]);
-      let zMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-      zMatrix.setRow(z, z);
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
-        let yMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-        yMatrix.setRow(y, y);
         for (let x = 0; x < this.cubeSize; x++) {
           let xMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-          xMatrix.setRow(x, x);
-          cubeArray[z][y].push(new Piece(xMatrix, yMatrix, zMatrix, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          let yMatrix = new Matrix([this.cubeSize, this.cubeSize]);
+          let zMatrix = new Matrix([this.cubeSize, this.cubeSize]);
+          // xMatrix.setNum(0, x);
+          // cubeArray[z][y].push(new Piece(cubeMatrix, y * pieceSize, z * pieceSize, 0, 0, 0));
+          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
         }
       }
     }
@@ -197,19 +196,19 @@ class Cube {
 
     if (keyIsDown(32)) {
       this.timer++;
-      if (this.timer <= 80) {
+      if (this.timer <= 75) {
         translate(0, -400, 0);
         text("3", 0, 0);
       }
-      else if (this.timer <= 160) {
+      else if (this.timer <= 150) {
         translate(0, -400, 0);
         text("2", 0, 0);
       }
-      else if (this.timer <= 240) {
+      else if (this.timer <= 225) {
         translate(0, -400, 0);
         text("1", 0, 0);
       }
-      else if (this.timer <= 320) {
+      else if (this.timer <= 300) {
         translate(0, -400, 0);
         text("GO!", 0, 0);
       }
