@@ -41,7 +41,7 @@ function draw() {
   background(100);
   orbitControl();
   cube.display();
-  cube.startTimer();
+  cube.countdown();
 }
 
 class Piece {
@@ -106,6 +106,7 @@ class Piece {
 class Cube {
   constructor(cubeSize) {
     this.cubeSize = cubeSize;
+    this.countdownTimer = 0;
     this.timer = 0;
   }
 
@@ -190,36 +191,35 @@ class Cube {
   }
   
 
-  startTimer() {
+  countdown() {
     resetMatrix();
     rotateY(180);
 
     if (keyIsDown(32)) {
-      this.timer++;
-      if (this.timer <= 75) {
+      this.countdownTimer++;
+      if (this.countdownTimer <= 75) {
+        push();
+        fill(255, 25, 0);
         translate(0, -400, 0);
-        text("3", 0, 0);
-      }
-      else if (this.timer <= 150) {
-        translate(0, -400, 0);
-        text("2", 0, 0);
-      }
-      else if (this.timer <= 225) {
-        translate(0, -400, 0);
-        text("1", 0, 0);
-      }
-      else if (this.timer <= 300) {
-        translate(0, -400, 0);
-        text("GO!", 0, 0);
+        text("0.00", 0, 0);
+        pop();
       }
       else {
+        push();
+        fill(56, 235, 0);
         translate(0, -400, 0);
-        text("", 0, 0);
+        text("0.00", 0, 0);
+        pop();
       }
     }
     else {
-      this.timer = 0;
+      this.countdownTimer = 0;
     }
+  }
+
+  startTimer() {  
+    let seconds = 0;
+
   }
 }
 
