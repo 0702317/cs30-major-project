@@ -7,9 +7,11 @@ let cubeArray = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300/cubeSize;
-let moves = ["U", "D", "F", "B", "L", "R", "U'", "D'", "F'", "B'", "L'", "R'"];
+let moves = ["u", "d", "f", "b", "l", "r", "u'", "d'", "f'", "b'", "l'", "r'"];
 let font;
 let cam;
+let timerStarted = false;
+let timerReady = false;
 
 function preload() {
   font = loadFont("ARIALBD.TTF");
@@ -107,7 +109,9 @@ class Cube {
   constructor(cubeSize) {
     this.cubeSize = cubeSize;
     this.countdownTimer = 0;
-    this.timer = 0;
+    this.milliseconds = 0;
+    this.seconds = 0;
+    this.minutes = 0;
   }
 
   generate() {
@@ -142,32 +146,32 @@ class Cube {
       for (let y = 0; y < cubeSize; y++) {
         for (let x = 0; x < cubeSize; x++) {
           let somePiece = cubeArray[z][y][x];
-          if (side === "U") {
+          if (side === "u") {
             if (somePiece.y === 0) {
               somePiece.yRotation -= 90;
             }
           }
-          if (side === "D") {
+          if (side === "d") {
             if (somePiece.y === 200) {
               somePiece.yRotation += 90;
             }
           }
-          else if (side === "F") {
+          else if (side === "f") {
             if (somePiece.z === 200) {
               somePiece.zRotation += 90;
             }
           }
-          else if (side === "B") {
+          else if (side === "b") {
             if (somePiece.z === 0) {
               somePiece.zRotation -= 90;
             }
           }
-          else if (side === "L") {
+          else if (side === "l") {
             if (somePiece.x === 0) {
               somePiece.xRotation -= 90;
             }
           }
-          else if (side === "R") {
+          else if (side === "r") {
             if (somePiece.x === 200) {
               somePiece.xRotation += 90;
             }
@@ -195,7 +199,8 @@ class Cube {
     resetMatrix();
     rotateY(180);
 
-    if (keyIsDown(32)) {
+    if (keyIsDown(32) && !timerStarted) {
+      timerReady = false;
       this.countdownTimer++;
       if (this.countdownTimer <= 75) {
         push();
@@ -210,39 +215,44 @@ class Cube {
         translate(0, -400, 0);
         text("0.00", 0, 0);
         pop();
+        timerReady = true;
       }
     }
-    else {
+    else  {
       this.countdownTimer = 0;
+      this.startTimer();
     }
   }
 
   startTimer() {  
-    let seconds = 0;
-
+    resetMatrix();
+    rotateY(180);
+    
+    if (timerReady) {
+      timerStarted = true;
+      this.milliseconds++;
+      if (this.milliseconds === 100) {
+        this.seconds++;
+        this.milliseconds = 0;
+      }
+      if (this.seconds === 60) {
+        this.minutes++;
+        this.seconds = 0;
+      }
+      
+      push();
+      fill(56, 235, 0);
+      translate(0, -400, 0);
+      text(this.minutes + ":" + this.seconds + "." + this.milliseconds, 1, 0, 0);
+      pop();
+    }
   }
 }
 
 function keyPressed() {
-  if (keyIsDown(85)) {
-    cube.turnSide("U");
-  }
-  if (keyIsDown(68)) {
-    cube.turnSide("D");
-  }
-  if (keyIsDown(70)) {
-    cube.turnSide("F");
-  }
-  if (keyIsDown(66)) {
-    cube.turnSide("B");
-  }
-  if (keyIsDown(76)) {
-    cube.turnSide("L");
-  }
-  if (keyIsDown(82)) {
-    cube.turnSide("R");
-  }
-  if (keyIsDown(83)) {
+  cube.turnSide(key);
+
+  if (key === "s") {
     cube.scramble();
   }
 }
