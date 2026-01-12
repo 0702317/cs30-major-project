@@ -20,7 +20,7 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
-  strokeWeight(6);
+  strokeWeight(8);
   debugMode();
   angleMode(DEGREES);
 
@@ -40,20 +40,20 @@ function setup() {
 }
 
 function draw() {
-  background(100);
+  background(200);
   orbitControl();
   cube.display();
   cube.countdown();
 }
 
 class Piece {
-  constructor(x, y, z, xTranslation, yTranslation, zTranslation, xRotation, yRotation, zRotation) {
+  constructor(x, y, z, xRotation, yRotation, zRotation) {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.xTranslation = xTranslation;
-    this.yTranslation = yTranslation;
-    this.zTranslation = zTranslation;
+    this.xTranslation = x * pieceSize;
+    this.yTranslation = y * pieceSize;
+    this.zTranslation = z * pieceSize;
     this.xRotation = xRotation;
     this.yRotation = yRotation;
     this.zRotation = zRotation;
@@ -120,7 +120,7 @@ class Cube {
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
         for (let x = 0; x < this.cubeSize; x++) {
-          cubeArray[z][y].push(new Piece(x, y, z, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          cubeArray[z][y].push(new Piece(x, y, z, 0, 0, 0));
         }
       }
     }
@@ -142,21 +142,21 @@ class Cube {
         for (let x = 0; x < cubeSize; x++) {
           let somePiece = cubeArray[z][y][x];
           if (side === "u" && somePiece.y === 0) {
-            let nx = (cubeSize - 1) - somePiece.z;
+            let nx = cubeSize - 1 - somePiece.z;
             let nz = somePiece.x;
             somePiece.x = nx;
             somePiece.z = nz;
             somePiece.yRotation -= 90;
           }
-          if (side === "d" && somePiece.y == 2) {
+          if (side === "d" && somePiece.y === 2) {
             let nx = somePiece.z;
-            let nz = (cubeSize - 1) - somePiece.x;
+            let nz = cubeSize - 1 - somePiece.x;
             somePiece.x = nx;
             somePiece.z = nz;
             somePiece.yRotation += 90;
           }
           if (side === "f" && somePiece.z === 2) {
-            let nx = (cubeSize - 1) - somePiece.y;
+            let nx = cubeSize - 1 - somePiece.y;
             let ny = somePiece.x;
             somePiece.x = nx;
             somePiece.y = ny;
@@ -164,21 +164,21 @@ class Cube {
           }
           if (side === "b" && somePiece.z === 0) {
             let nx = somePiece.y;
-            let ny = (cubeSize - 1) - somePiece.x;
+            let ny = cubeSize - 1 - somePiece.x;
             somePiece.x = nx;
             somePiece.y = ny;
             somePiece.zRotation -= 90;
           }
           if (side === "l" && somePiece.x === 0) {
             let ny = somePiece.z;
-            let nz = (cubeSize - 1) - somePiece.y
+            let nz = cubeSize - 1 - somePiece.y;
             somePiece.y = ny;
             somePiece.z = nz;
             somePiece.xRotation -= 90;
           }
           if (side === "r" && somePiece.x === 2) {
-            let ny = somePiece.z;
-            let nz = (cubeSize - 1) - somePiece.y;
+            let ny = cubeSize - 1 - somePiece.z;
+            let nz = somePiece.y;
             somePiece.y = ny;
             somePiece.z = nz;
             somePiece.xRotation += 90;
@@ -226,34 +226,38 @@ class Cube {
         timerReady = true;
       }
     }
+    else if (timerReady) {
+      this.startTimer();
+    }
     else  {
       this.countdownTimer = 0;
-      this.startTimer();
     }
   }
 
   startTimer() {  
     resetMatrix();
     rotateY(180);
-    
-    if (timerReady) {
-      timerStarted = true;
-      this.milliseconds++;
-      if (this.milliseconds === 100) {
-        this.seconds++;
-        this.milliseconds = 0;
-      }
-      if (this.seconds === 60) {
-        this.minutes++;
-        this.seconds = 0;
-      }
-      
-      push();
-      fill(56, 235, 0);
-      translate(0, -400, 0);
-      text(this.minutes + ":" + this.seconds + "." + this.milliseconds, 1, 0, 0);
-      pop();
+    timerStarted = true;
+    this.milliseconds++;
+    if (this.milliseconds === 100) {
+      this.seconds++;
+      this.milliseconds = 0;
     }
+    if (this.seconds === 60) {
+      this.minutes++;
+      this.seconds = 0;
+    }
+      
+    push();
+    fill(56, 235, 0);
+    translate(0, -400, 0);
+    text(this.minutes + ":" + this.seconds + "." + this.milliseconds, 1, 0, 0);
+    pop();
+  }
+
+  stopTimer() {
+    // stop timer
+    console.log(this.minutes + ":" + this.seconds + "." + this.milliseconds);
   }
 }
 
@@ -262,5 +266,13 @@ function keyPressed() {
 
   if (key === "s") {
     cube.scramble();
+  }
+  if (key === " ") {
+    if (timerStarted) {
+      cube.stopTimer();
+    }
+  }
+  if (key === "e") {
+    camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
   }
 }
