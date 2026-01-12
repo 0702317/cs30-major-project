@@ -120,12 +120,7 @@ class Cube {
       for (let y = 0; y < this.cubeSize; y++) {
         cubeArray[z].push([]);
         for (let x = 0; x < this.cubeSize; x++) {
-          let xMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-          let yMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-          let zMatrix = new Matrix([this.cubeSize, this.cubeSize]);
-          // xMatrix.setNum(0, x);
-          // cubeArray[z][y].push(new Piece(cubeMatrix, y * pieceSize, z * pieceSize, 0, 0, 0));
-          cubeArray[z][y].push(new Piece(x * pieceSize, y * pieceSize, z * pieceSize, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
+          cubeArray[z][y].push(new Piece(x, y, z, x * pieceSize, y * pieceSize, z * pieceSize, 0, 0, 0));
         }
       }
     }
@@ -146,35 +141,47 @@ class Cube {
       for (let y = 0; y < cubeSize; y++) {
         for (let x = 0; x < cubeSize; x++) {
           let somePiece = cubeArray[z][y][x];
-          if (side === "u") {
-            if (somePiece.y === 0) {
-              somePiece.yRotation -= 90;
-            }
+          if (side === "u" && somePiece.y === 0) {
+            let nx = (cubeSize - 1) - somePiece.z;
+            let nz = somePiece.x;
+            somePiece.x = nx;
+            somePiece.z = nz;
+            somePiece.yRotation -= 90;
           }
-          if (side === "d") {
-            if (somePiece.y === 200) {
-              somePiece.yRotation += 90;
-            }
+          if (side === "d" && somePiece.y == 2) {
+            let nx = somePiece.z;
+            let nz = (cubeSize - 1) - somePiece.x;
+            somePiece.x = nx;
+            somePiece.z = nz;
+            somePiece.yRotation += 90;
           }
-          else if (side === "f") {
-            if (somePiece.z === 200) {
-              somePiece.zRotation += 90;
-            }
+          if (side === "f" && somePiece.z === 2) {
+            let nx = (cubeSize - 1) - somePiece.y;
+            let ny = somePiece.x;
+            somePiece.x = nx;
+            somePiece.y = ny;
+            somePiece.zRotation += 90;
           }
-          else if (side === "b") {
-            if (somePiece.z === 0) {
-              somePiece.zRotation -= 90;
-            }
+          if (side === "b" && somePiece.z === 0) {
+            let nx = somePiece.y;
+            let ny = (cubeSize - 1) - somePiece.x;
+            somePiece.x = nx;
+            somePiece.y = ny;
+            somePiece.zRotation -= 90;
           }
-          else if (side === "l") {
-            if (somePiece.x === 0) {
-              somePiece.xRotation -= 90;
-            }
+          if (side === "l" && somePiece.x === 0) {
+            let ny = somePiece.z;
+            let nz = (cubeSize - 1) - somePiece.y
+            somePiece.y = ny;
+            somePiece.z = nz;
+            somePiece.xRotation -= 90;
           }
-          else if (side === "r") {
-            if (somePiece.x === 200) {
-              somePiece.xRotation += 90;
-            }
+          if (side === "r" && somePiece.x === 2) {
+            let ny = somePiece.z;
+            let nz = (cubeSize - 1) - somePiece.y;
+            somePiece.y = ny;
+            somePiece.z = nz;
+            somePiece.xRotation += 90;
           }
         }
       }
@@ -183,12 +190,13 @@ class Cube {
   
   scramble() {
     let scramble = "";
-    for (let i = 0; i < 30; i++) {
+    let scrambleLength = random(6, 25);
+    for (let i = 0; i < scrambleLength; i++) {
       let side = random(moves);
       this.turnSide(side);
       scramble = scramble + side + " ";
     }
-    console.log(scramble);
+    console.log(scramble.toUpperCase());
     // resetMatrix();
     // translate(0 -400, 0);
     // text("Scramble: " + scramble, 0, 0);
