@@ -20,8 +20,8 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
-  strokeWeight(8);
-  debugMode();
+  strokeWeight(1);
+  // debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -34,7 +34,7 @@ function setup() {
   textSize(100);
   textAlign(CENTER, TOP);
   
-  cube = new Cube(cubeSize);
+  cube = new Cube();
   cube.generate();
   // cube.scramble()
 }
@@ -62,12 +62,14 @@ class Piece {
 
   display() { // display the piece and perform rotations & translations.
     resetMatrix();
+    push();
     rotateX(this.xRotation);
     rotateY(this.yRotation);
     rotateZ(this.zRotation);
     translate(this.xTranslation, this.yTranslation, this.zTranslation);
     translate(-100, -100, -100);
     model(this.piece);
+    pop();
     
   }
 
@@ -106,8 +108,7 @@ class Piece {
 }
 
 class Cube {
-  constructor(cubeSize) {
-    this.cubeSize = cubeSize;
+  constructor() {
     this.countdownTimer = 0;
     this.milliseconds = 0;
     this.seconds = 0;
@@ -115,11 +116,11 @@ class Cube {
   }
 
   generate() {
-    for (let z = 0; z < this.cubeSize; z++) {
+    for (let z = 0; z < cubeSize; z++) {
       cubeArray.push([]);
-      for (let y = 0; y < this.cubeSize; y++) {
+      for (let y = 0; y < cubeSize; y++) {
         cubeArray[z].push([]);
-        for (let x = 0; x < this.cubeSize; x++) {
+        for (let x = 0; x < cubeSize; x++) {
           cubeArray[z][y].push(new Piece(x, y, z, 0, 0, 0));
         }
       }
@@ -127,9 +128,9 @@ class Cube {
   }
   
   display() {
-    for (let z = 0; z < this.cubeSize; z++) {
-      for (let y = 0; y < this.cubeSize; y++) {
-        for (let x = 0; x < this.cubeSize; x++) {
+    for (let z = 0; z < cubeSize; z++) {
+      for (let y = 0; y < cubeSize; y++) {
+        for (let x = 0; x < cubeSize; x++) {
           cubeArray[z][y][x].display();
         }
       }
@@ -148,14 +149,14 @@ class Cube {
             somePiece.z = nz;
             somePiece.yRotation -= 90;
           }
-          if (side === "d" && somePiece.y === 2) {
+          if (side === "d" && somePiece.y === cubeSize - 1) {
             let nx = somePiece.z;
             let nz = cubeSize - 1 - somePiece.x;
             somePiece.x = nx;
             somePiece.z = nz;
             somePiece.yRotation += 90;
           }
-          if (side === "f" && somePiece.z === 2) {
+          if (side === "f" && somePiece.z === cubeSize - 1) {
             let nx = cubeSize - 1 - somePiece.y;
             let ny = somePiece.x;
             somePiece.x = nx;
@@ -170,17 +171,17 @@ class Cube {
             somePiece.zRotation -= 90;
           }
           if (side === "l" && somePiece.x === 0) {
-            let ny = somePiece.z;
-            let nz = cubeSize - 1 - somePiece.y;
-            somePiece.y = ny;
+            let nz = somePiece.y;
+            let ny = cubeSize - 1 - somePiece.z;
             somePiece.z = nz;
+            somePiece.y = ny;
             somePiece.xRotation -= 90;
           }
-          if (side === "r" && somePiece.x === 2) {
-            let ny = cubeSize - 1 - somePiece.z;
-            let nz = somePiece.y;
-            somePiece.y = ny;
+          if (side === "r" && somePiece.x === cubeSize - 1) {
+            let nz = cubeSize - 1 - somePiece.y;
+            let ny = somePiece.z;
             somePiece.z = nz;
+            somePiece.y = ny;
             somePiece.xRotation += 90;
           }
         }
