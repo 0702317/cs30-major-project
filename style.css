@@ -3,14 +3,14 @@ html {
   padding: 0;
 }
 
-body {
+/* body {
   position:absolute;
   scale: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: lightgray;
-}
+} */
 
 canvas {
   display: block;

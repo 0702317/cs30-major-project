@@ -32,7 +32,7 @@ function setup() {
 
   textFont(font);
   textSize(100);
-  textAlign(CENTER, TOP);
+  textAlign(CENTER, CENTER);
 
   cube = new Cube();
   cube.generate();
@@ -44,6 +44,9 @@ function draw() {
   orbitControl();
   cube.display();
   cube.countdown();
+  push();
+  text("test", 0, 0);
+  pop();
 }
 
 class Piece {
@@ -61,12 +64,35 @@ class Piece {
 
   display() { // display the piece and perform rotations & translations.
     resetMatrix();
+    translate(this.xTranslation, this.yTranslation, this.zTranslation);
+    translate(-100, -100, -100);
     rotateX(this.xRotation);
     rotateY(this.yRotation);
     rotateZ(this.zRotation);
-    translate(this.xTranslation, this.yTranslation, this.zTranslation);
-    translate(-100, -100, -100);
     this.createPiece();
+  }
+
+  rotate(side, angle) {
+    push();
+    if (side === "u") {
+      rotateY(angle);
+    }
+    if (side === "d") {
+      rotateY(angle);
+    }
+    if (side === "f") {
+      rotateZ(angle);
+    }
+    if (side === "b") {
+      rotateZ(angle);
+    }
+    if (side === "l") {
+      rotateX(angle);
+    }
+    if (side === "r") {
+      rotateX(angle);
+    }
+    pop();
   }
 
   createPiece() { // create the design for a single piece.
@@ -134,7 +160,7 @@ class Cube {
         let nz = somePiece.x;
         somePiece.x = nx;
         somePiece.z = nz;
-        somePiece.yRotation -= 90;
+        somePiece.rotate(side, -90);
       }
       if (side === "d" && somePiece.y === 2) {
         let nx = somePiece.z;
