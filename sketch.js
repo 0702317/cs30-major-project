@@ -6,7 +6,7 @@ let cube;
 let cubeArray = [];
 let piece;
 let cubeSize = 3;
-let pieceSize = 300/cubeSize;
+let pieceSize = 300 / cubeSize;
 let moves = ["u", "d", "f", "b", "l", "r", "u'", "d'", "f'", "b'", "l'", "r'"];
 let font;
 let cam;
@@ -33,7 +33,7 @@ function setup() {
   textFont(font);
   textSize(100);
   textAlign(CENTER, TOP);
-  
+
   cube = new Cube();
   cube.generate();
   // cube.scramble()
@@ -57,20 +57,16 @@ class Piece {
     this.xRotation = xRotation;
     this.yRotation = yRotation;
     this.zRotation = zRotation;
-    this.piece = buildGeometry(this.createPiece);
   }
 
   display() { // display the piece and perform rotations & translations.
     resetMatrix();
-    push();
     rotateX(this.xRotation);
     rotateY(this.yRotation);
     rotateZ(this.zRotation);
     translate(this.xTranslation, this.yTranslation, this.zTranslation);
     translate(-100, -100, -100);
-    model(this.piece);
-    pop();
-    
+    this.createPiece();
   }
 
   createPiece() { // create the design for a single piece.
@@ -117,78 +113,125 @@ class Cube {
 
   generate() {
     for (let z = 0; z < cubeSize; z++) {
-      cubeArray.push([]);
+      // cubeArray.push([]);
       for (let y = 0; y < cubeSize; y++) {
-        cubeArray[z].push([]);
+        // cubeArray[z].push([]);
         for (let x = 0; x < cubeSize; x++) {
-          cubeArray[z][y].push(new Piece(x, y, z, 0, 0, 0));
-        }
-      }
-    }
-  }
-  
-  display() {
-    for (let z = 0; z < cubeSize; z++) {
-      for (let y = 0; y < cubeSize; y++) {
-        for (let x = 0; x < cubeSize; x++) {
-          cubeArray[z][y][x].display();
+          cubeArray.push(new Piece(x, y, z, 0, 0, 0));
         }
       }
     }
   }
 
+  display() {
+    // for (let z = 0; z < cubeSize; z++) {
+    //   for (let y = 0; y < cubeSize; y++) {
+    //     for (let x = 0; x < cubeSize; x++) {
+    //       cubeArray[z][y][x].display();
+    //     }
+    //   }
+    // }
+    for (let somePiece of cubeArray) {
+      somePiece.display();
+    }
+  }
+
   turnSide(side) {
-    for (let z = 0; z < cubeSize; z++) {
-      for (let y = 0; y < cubeSize; y++) {
-        for (let x = 0; x < cubeSize; x++) {
-          let somePiece = cubeArray[z][y][x];
-          if (side === "u" && somePiece.y === 0) {
-            let nx = cubeSize - 1 - somePiece.z;
-            let nz = somePiece.x;
-            somePiece.x = nx;
-            somePiece.z = nz;
-            somePiece.yRotation -= 90;
-          }
-          if (side === "d" && somePiece.y === cubeSize - 1) {
-            let nx = somePiece.z;
-            let nz = cubeSize - 1 - somePiece.x;
-            somePiece.x = nx;
-            somePiece.z = nz;
-            somePiece.yRotation += 90;
-          }
-          if (side === "f" && somePiece.z === cubeSize - 1) {
-            let nx = cubeSize - 1 - somePiece.y;
-            let ny = somePiece.x;
-            somePiece.x = nx;
-            somePiece.y = ny;
-            somePiece.zRotation += 90;
-          }
-          if (side === "b" && somePiece.z === 0) {
-            let nx = somePiece.y;
-            let ny = cubeSize - 1 - somePiece.x;
-            somePiece.x = nx;
-            somePiece.y = ny;
-            somePiece.zRotation -= 90;
-          }
-          if (side === "l" && somePiece.x === 0) {
-            let nz = somePiece.y;
-            let ny = cubeSize - 1 - somePiece.z;
-            somePiece.z = nz;
-            somePiece.y = ny;
-            somePiece.xRotation -= 90;
-          }
-          if (side === "r" && somePiece.x === cubeSize - 1) {
-            let nz = cubeSize - 1 - somePiece.y;
-            let ny = somePiece.z;
-            somePiece.z = nz;
-            somePiece.y = ny;
-            somePiece.xRotation += 90;
-          }
-        }
+    // for (let z = 0; z < cubeSize; z++) {
+    //   for (let y = 0; y < cubeSize; y++) {
+    //     for (let x = 0; x < cubeSize; x++) {
+    //       let somePiece = cubeArray[z][y][x];
+    //       if (side === "u" && somePiece.y === 0) {
+    //         let nx = cubeSize - 1 - somePiece.z;
+    //         let nz = somePiece.x;
+    //         somePiece.x = nx;
+    //         somePiece.z = nz;
+    //         somePiece.yRotation -= 90;
+    //       }
+    //       if (side === "d" && somePiece.y === cubeSize - 1) {
+    //         let nx = somePiece.z;
+    //         let nz = cubeSize - 1 - somePiece.x;
+    //         somePiece.x = nx;
+    //         somePiece.z = nz;
+    //         somePiece.yRotation += 90;
+    //       }
+    //       if (side === "f" && somePiece.z === cubeSize - 1) {
+    //         let nx = cubeSize - 1 - somePiece.y;
+    //         let ny = somePiece.x;
+    //         somePiece.x = nx;
+    //         somePiece.y = ny;
+    //         somePiece.zRotation += 90;
+    //       }
+    //       if (side === "b" && somePiece.z === 0) {
+    //         let nx = somePiece.y;
+    //         let ny = cubeSize - 1 - somePiece.x;
+    //         somePiece.x = nx;
+    //         somePiece.y = ny;
+    //         somePiece.zRotation -= 90;
+    //       }
+    //       if (side === "l" && somePiece.x === 0) {
+    //         let nz = somePiece.y;
+    //         let ny = cubeSize - 1 - somePiece.z;
+    //         somePiece.z = nz;
+    //         somePiece.y = ny;
+    //         somePiece.xRotation -= 90;
+    //       }
+    //       if (side === "r" && somePiece.x === cubeSize - 1) {
+    //         let nz = cubeSize - 1 - somePiece.y;
+    //         let ny = somePiece.z;
+    //         somePiece.z = nz;
+    //         somePiece.y = ny;
+    //         somePiece.xRotation += 90;
+    //       }
+    //     }
+    //   }
+    // }
+    for (let somePiece of cubeArray) {
+      if (side === "u" && somePiece.y === 0) {
+        let nx = cubeSize - 1 - somePiece.z;
+        let nz = somePiece.x;
+        somePiece.x = nx;
+        somePiece.z = nz;
+        somePiece.yRotation -= 90;
+      }
+      if (side === "d" && somePiece.y === cubeSize - 1) {
+        let nx = somePiece.z;
+        let nz = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.z = nz;
+        somePiece.yRotation += 90;
+      }
+      if (side === "f" && somePiece.z === cubeSize - 1) {
+        let nx = cubeSize - 1 - somePiece.y;
+        let ny = somePiece.x;
+        somePiece.x = nx;
+        somePiece.y = ny;
+        somePiece.zRotation += 90;
+      }
+      if (side === "b" && somePiece.z === 0) {
+        let nx = somePiece.y;
+        let ny = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.y = ny;
+        somePiece.zRotation -= 90;
+      }
+      if (side === "l" && somePiece.x === 0) {
+        let nz = somePiece.y;
+        let ny = cubeSize - 1 - somePiece.z;
+        somePiece.z = nz;
+        somePiece.y = ny;
+        somePiece.xRotation -= 90;
+      }
+      if (side === "r" && somePiece.x === cubeSize - 1) {
+        let nz = cubeSize - 1 - somePiece.y;
+        let ny = somePiece.z;
+        somePiece.z = nz;
+        somePiece.y = ny;
+        somePiece.xRotation += 90;
       }
     }
   }
-  
+
   scramble() {
     let scramble = "";
     let scrambleLength = random(6, 25);
@@ -202,7 +245,7 @@ class Cube {
     // translate(0 -400, 0);
     // text("Scramble: " + scramble, 0, 0);
   }
-  
+
 
   countdown() {
     resetMatrix();
@@ -230,12 +273,12 @@ class Cube {
     else if (timerReady) {
       this.startTimer();
     }
-    else  {
+    else {
       this.countdownTimer = 0;
     }
   }
 
-  startTimer() {  
+  startTimer() {
     resetMatrix();
     rotateY(180);
     timerStarted = true;
@@ -248,7 +291,7 @@ class Cube {
       this.minutes++;
       this.seconds = 0;
     }
-      
+
     push();
     fill(56, 235, 0);
     translate(0, -400, 0);
