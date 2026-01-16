@@ -8,7 +8,7 @@ let piece;
 let cubeSize = 3;
 let pieceSize = 300 / cubeSize;
 let moves = ["u", "d", "f", "b", "l", "r", "u'", "d'", "f'", "b'", "l'", "r'"];
-let scramble = "";
+let scramble = "Press S to scramble.";
 let font;
 let cam;
 let timerStarted = false;
