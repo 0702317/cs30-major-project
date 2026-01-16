@@ -2,6 +2,16 @@
 // Graham Lindsay
 // January 19th, 2025
 
+// Sources
+// - 
+// - 
+// - 
+
+// Extra For Experts:
+// - 
+// - 
+// - 
+
 let cube;
 let cubeArray = [];
 let piece;
@@ -51,7 +61,7 @@ function setup() {
 
 // draw loop.
 function draw() {
-  background(211);
+  background(100);
   orbitControl();
   cube.display(); // display cube.
   cube.countdown(); // timer countdown.

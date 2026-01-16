@@ -5,10 +5,19 @@ html {
 
 body {
   position:absolute;
-  scale: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  scale: 70%;
+  top: 70%;
+  left: 70%;
+  transform: translate(-100%, -100%);
+  background-color: lightgray;
+}
+
+#cube {
+  position:absolute;
+  scale: 70%;
+  top: 70%;
+  left: 70%;
+  transform: translate(-100%, -100%);
   background-color: lightgray;
 }
 
