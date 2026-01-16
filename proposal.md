@@ -9,6 +9,7 @@
 - Display the scramble algorithm.
 - Solve timer at the top of the screen.
 - Music and sound effects for turning.
+- Instructions.
 
 ## Nice to Have
 - Multiple sizes of cubes.

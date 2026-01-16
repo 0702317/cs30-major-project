@@ -7,7 +7,7 @@ let cubeArray = [];
 let piece;
 let cubeSize = 3;
 let pieceSize = 300 / cubeSize;
-let moves = ["u", "d", "f", "b", "l", "r", "u'", "d'", "f'", "b'", "l'", "r'"];
+let moves = ["u", "d", "f", "b", "l", "r", "U", "D", "F", "B", "L", "R"];
 let scramble = "Press S to scramble.";
 let font;
 let cam;
@@ -80,23 +80,41 @@ class Piece {
       if (rotation === "u") {
         rotateY(-90);
       }
+      if (rotation === "U") {
+        rotateY(90);
+      }
       if (rotation === "d") {
         rotateY(90);
+      }
+      if (rotation === "D") {
+        rotateY(-90);
       }
       if (rotation === "f") {
         rotateZ(90);
       }
+      if (rotation === "F") {
+        rotateZ(-90);
+      }
       if (rotation === "b") {
         rotateZ(-90);
+      }
+      if (rotation === "B") {
+        rotateZ(90);
       }
       if (rotation === "l") {
         rotateX(-90);
       }
+      if (rotation === "L") {
+        rotateX(90);
+      }
       if (rotation === "r") {
         rotateX(90);
       }
+      if (rotation === "R") {
+        rotateX(-90);
+      }
     }
-    
+
     // rotate the pieces.
     // rotateX(this.xRotation);
     // rotateY(this.yRotation);
@@ -194,14 +212,33 @@ class Cube {
         somePiece.z = nz; // update z position.
         somePiece.rotations.unshift(side);
       }
-
       // repeat for the rest of the moves.
+      if (side === "U" && somePiece.y === 0) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nx = somePiece.z;
+        let nz = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.z = nz;
+        somePiece.rotations.unshift(side);
+      }
       if (side === "d" && somePiece.y === 2) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
         let nx = somePiece.z;
         let nz = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.z = nz;
+        somePiece.rotations.unshift(side);
+      }
+      if (side === "D" && somePiece.y === 2) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nx = cubeSize - 1 - somePiece.z;
+        let nz = somePiece.x;
         somePiece.x = nx;
         somePiece.z = nz;
         somePiece.rotations.unshift(side);
@@ -216,12 +253,32 @@ class Cube {
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
       }
+      if (side === "F" && somePiece.z === 2) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nx = somePiece.y;
+        let ny = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.y = ny;
+        somePiece.rotations.unshift(side);
+      }
       if (side === "b" && somePiece.z === 0) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
         let nx = somePiece.y;
         let ny = cubeSize - 1 - somePiece.x;
+        somePiece.x = nx;
+        somePiece.y = ny;
+        somePiece.rotations.unshift(side);
+      }
+      if (side === "B" && somePiece.z === 0) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nx = cubeSize - 1 - somePiece.y;
+        let ny = somePiece.x;
         somePiece.x = nx;
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
@@ -236,12 +293,32 @@ class Cube {
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
       }
+      if (side === "L" && somePiece.x === 0) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nz = somePiece.y;
+        let ny = cubeSize - 1 - somePiece.z;
+        somePiece.z = nz;
+        somePiece.y = ny;
+        somePiece.rotations.unshift(side);
+      }
       if (side === "r" && somePiece.x === 2) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
         let nz = somePiece.y;
         let ny = cubeSize - 1 - somePiece.z;
+        somePiece.z = nz;
+        somePiece.y = ny;
+        somePiece.rotations.unshift(side);
+      }
+      if (side === "R" && somePiece.x === 2) {
+        if (!turnSound.isPlaying()) {
+          turnSound.play();
+        }
+        let nz = cubeSize - 1 - somePiece.y;
+        let ny = somePiece.z;
         somePiece.z = nz;
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
@@ -258,6 +335,7 @@ class Cube {
       this.turnSide(side);
       scramble = scramble + side + " ";
     }
+    
     scramble = scramble.toUpperCase(); // set the letters to uppercase for the scramble display.
   }
 
