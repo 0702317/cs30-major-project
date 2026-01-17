@@ -3,22 +3,32 @@ html {
   padding: 0;
 }
 
+
 body {
   position:absolute;
   scale: 70%;
   top: 70%;
   left: 70%;
   transform: translate(-100%, -100%);
-  background-color: lightgray;
+  background-color: whitesmoke;
 }
 
-#cube {
-  position:absolute;
-  scale: 70%;
-  top: 70%;
-  left: 70%;
-  transform: translate(-100%, -100%);
-  background-color: lightgray;
+#timer {
+  position: absolute;
+  text-align: center;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 100px;
+  color: black;
+}
+
+#scramble {
+  position: relative;
+  text-align: center;  
+  border-style: solid;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 50px;
+  padding: 15px;
 }
 
 canvas {

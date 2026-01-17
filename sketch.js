@@ -26,6 +26,7 @@ let timerReady = false;
 let turnSound;
 let music;
 
+
 // preload assets.
 function preload() {
   font = loadFont("assets/ARIALBD.TTF");
@@ -35,25 +36,20 @@ function preload() {
 // setup function.
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-
+  
   strokeWeight(8);
   // debugMode();
   angleMode(DEGREES);
-
+  
   // back face culling.
   drawingContext.enable(drawingContext.CULL_FACE);
   drawingContext.cullFace(drawingContext.FRONT);
-
+  
   // position and orient the camera.
-  camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
-
-  // set up text properties.
-  textFont(font);
-  textSize(100);
-  textAlign(CENTER, CENTER);
-
+  camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
+  
   turnSound.setVolume(0.25);
-
+  
   cube = new Cube();
   cube.generate();
   // cube.scramble()
@@ -140,32 +136,32 @@ class Piece {
     // not the most efficient way to do colours because it is rendering colours that cant be seen, but it saves lots of difficult calculations for orientation of pieces and distinguising between corner/edge pieces.
     push();
     translate(0, -3, 0);
-    fill("white");
+    fill("#ffffff");
     box(pieceSize);
     pop();
     push();
     translate(0, 3, 0);
-    fill("yellow");
+    fill("#f6ff00");
     box(pieceSize);
     pop();
     push();
     translate(3, 0, 0);
-    fill("orange");
+    fill("#B90000");
     box(pieceSize);
     pop();
     push();
     translate(-3, 0, 0);
-    fill("red");
+    fill("#ff8b1a");
     box(pieceSize);
     pop();
     push();
     translate(0, 0, 3);
-    fill("green");
+    fill("#009B48");
     box(pieceSize);
     pop();
     push();
     translate(0, 0, -3);
-    fill("blue");
+    fill("#00398f");
     box(pieceSize);
     pop();
   }
@@ -200,13 +196,13 @@ class Cube {
     }
 
     // display scamble.
-    push();
-    resetMatrix();
-    translate(0, 500, 0);
-    fill(0);
-    rotateY(180);
-    text(scramble, 0, 0);
-    pop();
+    document.getElementById("scramble").innerHTML = scramble;
+    if (this.currentTime === 0) {
+      document.getElementById("timer").innerHTML = "0.00";
+    }
+    else {
+      document.getElementById("timer").innerHTML = this.currentTime;
+    }
   }
 
   // turn a side of the cube.
@@ -338,14 +334,16 @@ class Cube {
 
   // generate and apply a scramble.
   scramble() {
-    let scrambleLength = random(10, 25); // choose a random length.
+    let scrambleLength = random(12, 28); // choose a random length.
     scramble = "";
     for (let i = 0; i < scrambleLength; i++) { // create a random sequence of moves, and then update the cube.
       let side = random(moves);
       this.turnSide(side);
+      if (side === side.toUpperCase()) {
+        side = side + "'";
+      }
       scramble = scramble + side + " ";
     }
-    
     scramble = scramble.toUpperCase(); // set the letters to uppercase for the scramble display.
   }
 
@@ -358,23 +356,10 @@ class Cube {
       timerReady = false;
       this.countdownTimer++;
       if (this.countdownTimer <= 35) { // fill red if space is pressed but not held for long enough.
-        push();
-        fill(255, 25, 0);
-        translate(0, -400, 0);
-        if (this.currentTime === 0) { // formatting so that the timer displays decimal places even when at 0.
-          text("0.00", 0, 0);
-        }
-        else {
-          text(this.currentTime, 0, 0);
-        }
-        pop();
+        document.getElementById("timer").style.color = "#ff1900";
       }
       else { // fill green when the timer is ready to be started.
-        push();
-        fill(56, 235, 0);
-        translate(0, -400, 0);
-        text("0.00", 0, 0);
-        pop();
+        document.getElementById("timer").style.color = "#04DD04";
         timerReady = true; // set the timerReady variable to true.
       }
     }
@@ -395,12 +380,7 @@ class Cube {
     push();
     fill(0);
     translate(0, -400, 0);
-    if (this.currentTime === 0) { // display the timer on screen.
-      text("0.00", 0, 0);
-    }
-    else {
-      text(this.currentTime, 0, 0);
-    }
+    document.getElementById("timer").style.color = "black";
     pop();
   }
 }
@@ -416,6 +396,6 @@ function keyPressed() {
     cube.startMillis = millis();
   }
   if (key === "e") { // reset camera position when "e" is pressed.
-    camera(500, -500, 500, 0, 0, 0, 0, 1, 0);
+    camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
   }
 }
