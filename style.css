@@ -3,14 +3,13 @@ html {
   padding: 0;
 }
 
-
 body {
   position:absolute;
-  scale: 70%;
-  top: 70%;
-  left: 70%;
+  scale: 75%;
+  top: 75%;
+  left: 75%;
   transform: translate(-100%, -100%);
-  background-color: whitesmoke;
+  background-color: beige;
 }
 
 #timer {
@@ -20,15 +19,37 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 100px;
   color: black;
+  background-color: whitesmoke;
+  padding: 15px;
+  border-style: solid;
+  border-radius: 20px;
+  border-width: 7px;
 }
 
 #scramble {
   position: relative;
   text-align: center;  
   border-style: solid;
+  border-radius: 10px;
+  border-width: 5px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 50px;
   padding: 15px;
+  background-color: whitesmoke;
+}
+
+#instructions {
+  width: fit-content;
+  position: absolute;
+  text-align: left;
+  transform: translate(-20%);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 5px;
+  padding: 15px;
+  background-color: whitesmoke;
 }
 
 canvas {
