@@ -52,7 +52,7 @@ body {
   background-color: whitesmoke;
 }
 
-#bottomText {
+#instructionsText {
   position: relative;
   transform: translate(0%, 300%);
   font-family: Verdana, Geneva, Tahoma, sans-serif;

@@ -1,4 +1,4 @@
-# CS30 Major Project Beta Testing
+# CS30 Major Project Beta Testing - Graham Lindsay
 
 ## Non-programmer:
 
@@ -10,15 +10,7 @@
  - Timer is cut off. - FIXED
  - Timer doesnt have minutes. - FIXED
  - Instructions get in the way a bit. - FIXED
- - Timer starts before you let go of the space bar. - 
-
-## Non-programmer & cuber:
-
-### Pros:
- - 
-
-### Cons:
- - 
+ - Timer starts before you let go of the space bar. - WORKING ON FIXING
 
 ## Programmer:
 

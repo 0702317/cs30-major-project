@@ -3,9 +3,13 @@
 // January 19th, 2025
 
 // Sources
-// - 
-// - 
-// - 
+// - Logic for the timer adapted from https://editor.p5js.org/hanxyn888@gmail.com/sketches/ir8PEq3L2 
+// - Final method of rotation inspired by https://editor.p5js.org/simontiger/sketches/EDyvLGUTJ 
+// - Videos used for research:
+//    - https://www.youtube.com/watch?v=9PGfL4t-uqE
+//    - https://www.youtube.com/watch?v=EGmVulED_4M
+//    - https://www.youtube.com/watch?v=8U2gsbNe1Uo 
+
 
 let cube;
 let cubeArray = [];
@@ -14,7 +18,6 @@ let cubeSize = 3;
 let pieceSize = 300 / cubeSize;
 let moves = ["u", "d", "f", "b", "l", "r", "U", "D", "F", "B", "L", "R"];
 let scramble = "Press S to scramble.";
-let font;
 let cam;
 let turnSound;
 let music;
@@ -32,7 +35,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   strokeWeight(8);
-  // debugMode();
   angleMode(DEGREES);
 
   // back face culling.
@@ -42,17 +44,20 @@ function setup() {
   // position and orient the camera.
   camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
 
+  // set the volume of the sound effect.
   turnSound.setVolume(0.25);
 
+  // hide the instructions HTML element.
   document.getElementById("instructions").hidden = true;
 
+  // create the cube.
   cube = new Cube();
   cube.generate();
 }
 
 // draw loop.
 function draw() {
-  background(160);
+  background(200);
   orbitControl();
   cube.display(); // display cube.
   cube.countdown(); // timer countdown.
@@ -60,33 +65,36 @@ function draw() {
 
 // piece object.
 class Piece {
-  constructor(x, y, z, xRotation, yRotation, zRotation) {
+  constructor(x, y, z) {
+    // variables to store positions.
     this.x = x;
     this.y = y;
     this.z = z;
-    this.xRotation = xRotation;
-    this.yRotation = yRotation;
-    this.zRotation = zRotation;
-    this.rotations = [];
+
+    // empty list to store rotations
+    this.rotations = []; 
   }
 
-  display() { // display the piece and perform rotations & translations.
+  // display the piece and perform rotations & translations.
+  display() { 
     resetMatrix();
 
     // move pieces into place.
     translate(this.x * pieceSize, this.y * pieceSize, this.z * pieceSize);
+    // 3x3 Cube.
     if (cubeSize === 3) {
       translate(-pieceSize, -pieceSize, -pieceSize);
     }
+    // 2x2 Cube.
     if (cubeSize === 2) {
       translate(-pieceSize/2, -pieceSize/2, -pieceSize/2);
     }
 
     for (let rotation of this.rotations) {
-      if (rotation === "u") {
+      if (rotation === "u") { // rotate the pieces along the Y axis for a "u" in the list
         rotateY(-90);
       }
-      if (rotation === "U") {
+      if (rotation === "U") { // repeat for every rotation.
         rotateY(90);
       }
       if (rotation === "d") {
@@ -181,7 +189,7 @@ class Cube {
     for (let z = 0; z < cubeSize; z++) {
       for (let y = 0; y < cubeSize; y++) {
         for (let x = 0; x < cubeSize; x++) {
-          cubeArray.push(new Piece(x, y, z, 0, 0, 0));
+          cubeArray.push(new Piece(x, y, z));
         }
       }
     }
@@ -196,9 +204,10 @@ class Cube {
     // display scamble.
     document.getElementById("scramble").innerHTML = scramble;
     if (this.currentTime === 0) {
-      document.getElementById("timer").innerHTML = "0:00.00";
+      document.getElementById("timer").innerHTML = "0:00.000";
     }
     else {
+      // logic for the timer adapted from https://editor.p5js.org/hanxyn888@gmail.com/sketches/ir8PEq3L2 
       this.seconds = Math.floor(this.currentTime / 1000) % 60;
       this.minutes = Math.floor(this.currentTime / 60000);
       this.milliseconds = Math.floor(this.currentTime) - this.seconds * 1000 - this.minutes * 60000;
@@ -355,9 +364,6 @@ class Cube {
 
   // first timer to detect if you are holding space for long enough.
   countdown() {
-    resetMatrix();
-    rotateY(180);
-    // this.heldTime = 0;
     if (keyIsDown(32) && !timerStarted) {
       timerReady = false;
       this.countdownTimer++;
@@ -367,7 +373,7 @@ class Cube {
       }
       else { // fill green when the timer is ready to be started.
         document.getElementById("timer").style.color = "#04DD04";
-        document.getElementById("timer").innerHTML = "0:00.00";
+        document.getElementById("timer").innerHTML = "0:00.000";
         timerReady = true; // set the timerReady variable to true.
       }
     }
@@ -378,13 +384,13 @@ class Cube {
   }
 
   // start the timer.
-  // main code for the timer inspired by https://editor.p5js.org/hanxyn888@gmail.com/sketches/ir8PEq3L2
+  // logic for the timer adapted from https://editor.p5js.org/hanxyn888@gmail.com/sketches/ir8PEq3L2
   startTimer() {
     resetMatrix();
     rotateY(180);
     timerStarted = !timerStarted; // switch the state of the timerStarted variable.
     if (timerStarted && timerReady) { // if timerStarted and timerReady are true, update the currentTime.
-      this.currentTime = ((millis() - this.startMillis)) - 600;
+      this.currentTime = millis() - this.startMillis - 600;
     }
     document.getElementById("timer").style.color = "black";
   }
@@ -403,7 +409,7 @@ function keyPressed() {
   if (key === "e") { // reset camera position when "e" is pressed.
     camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
   }
-  if (key === "i") {
+  if (key === "i") { // toggle betweeen showing and hiding the instructions.
     instructionsHidden = !instructionsHidden;
     if (instructionsHidden) {
       document.getElementById("instructions").hidden = true;

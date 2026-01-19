@@ -1,4 +1,4 @@
-# Major Project Proposal
+# CS30 Major Project Proposal - Graham Lindsay
 
 ## Description
 - A 3d Rubik's cube simulator/solve timer.
