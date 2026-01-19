@@ -7,11 +7,6 @@
 // - 
 // - 
 
-// Extra For Experts:
-// - 
-// - 
-// - 
-
 let cube;
 let cubeArray = [];
 let piece;
@@ -21,43 +16,43 @@ let moves = ["u", "d", "f", "b", "l", "r", "U", "D", "F", "B", "L", "R"];
 let scramble = "Press S to scramble.";
 let font;
 let cam;
-let timerStarted = false;
-let timerReady = false;
 let turnSound;
 let music;
-
+let timerStarted = false;
+let timerReady = false;
+let instructionsHidden = true;
 
 // preload assets.
 function preload() {
-  font = loadFont("assets/ARIALBD.TTF");
   turnSound = loadSound("assets/rubiks_cube_turn.mp3");
 }
 
 // setup function.
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  
+
   strokeWeight(8);
   // debugMode();
   angleMode(DEGREES);
-  
+
   // back face culling.
   drawingContext.enable(drawingContext.CULL_FACE);
   drawingContext.cullFace(drawingContext.FRONT);
-  
+
   // position and orient the camera.
   camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
-  
+
   turnSound.setVolume(0.25);
-  
+
+  document.getElementById("instructions").hidden = true;
+
   cube = new Cube();
   cube.generate();
-  // cube.scramble()
 }
 
 // draw loop.
 function draw() {
-  background(100);
+  background(160);
   orbitControl();
   cube.display(); // display cube.
   cube.countdown(); // timer countdown.
@@ -80,7 +75,12 @@ class Piece {
 
     // move pieces into place.
     translate(this.x * pieceSize, this.y * pieceSize, this.z * pieceSize);
-    translate(-100, -100, -100);
+    if (cubeSize === 3) {
+      translate(-pieceSize, -pieceSize, -pieceSize);
+    }
+    if (cubeSize === 2) {
+      translate(-pieceSize/2, -pieceSize/2, -pieceSize/2);
+    }
 
     for (let rotation of this.rotations) {
       if (rotation === "u") {
@@ -120,11 +120,6 @@ class Piece {
         rotateX(-90);
       }
     }
-
-    // rotate the pieces.
-    // rotateX(this.xRotation);
-    // rotateY(this.yRotation);
-    // rotateZ(this.zRotation);
 
     // create the 3D piece.
     this.createPiece();
@@ -175,7 +170,10 @@ class Cube {
     this.currentTime = 0;
     this.startMillis = 0;
     this.currentMillis = 0;
-    let minutes = 0;
+    this.seconds = 0;
+    this.minutes = 0;
+    this.milliseconds = 0;
+    this.heldTime = 0;
   }
 
   // generate an array filled with the pieces of the cube.
@@ -198,10 +196,18 @@ class Cube {
     // display scamble.
     document.getElementById("scramble").innerHTML = scramble;
     if (this.currentTime === 0) {
-      document.getElementById("timer").innerHTML = "0.00";
+      document.getElementById("timer").innerHTML = "0:00.00";
     }
     else {
-      document.getElementById("timer").innerHTML = this.currentTime;
+      this.seconds = Math.floor(this.currentTime / 1000) % 60;
+      this.minutes = Math.floor(this.currentTime / 60000);
+      this.milliseconds = Math.floor(this.currentTime) - this.seconds * 1000 - this.minutes * 60000;
+      if (this.seconds < 10) {
+        document.getElementById("timer").innerHTML = this.minutes + ":0" + this.seconds + "." + this.milliseconds;
+      }
+      else {
+        document.getElementById("timer").innerHTML = this.minutes + ":" + this.seconds + "." + this.milliseconds;
+      }
     }
   }
 
@@ -229,7 +235,7 @@ class Cube {
         somePiece.z = nz;
         somePiece.rotations.unshift(side);
       }
-      if (side === "d" && somePiece.y === 2) {
+      if (side === "d" && somePiece.y === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -239,7 +245,7 @@ class Cube {
         somePiece.z = nz;
         somePiece.rotations.unshift(side);
       }
-      if (side === "D" && somePiece.y === 2) {
+      if (side === "D" && somePiece.y === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -249,7 +255,7 @@ class Cube {
         somePiece.z = nz;
         somePiece.rotations.unshift(side);
       }
-      if (side === "f" && somePiece.z === 2) {
+      if (side === "f" && somePiece.z === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -259,7 +265,7 @@ class Cube {
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
       }
-      if (side === "F" && somePiece.z === 2) {
+      if (side === "F" && somePiece.z === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -309,7 +315,7 @@ class Cube {
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
       }
-      if (side === "r" && somePiece.x === 2) {
+      if (side === "r" && somePiece.x === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -319,7 +325,7 @@ class Cube {
         somePiece.y = ny;
         somePiece.rotations.unshift(side);
       }
-      if (side === "R" && somePiece.x === 2) {
+      if (side === "R" && somePiece.x === cubeSize - 1) {
         if (!turnSound.isPlaying()) {
           turnSound.play();
         }
@@ -351,15 +357,17 @@ class Cube {
   countdown() {
     resetMatrix();
     rotateY(180);
-
+    // this.heldTime = 0;
     if (keyIsDown(32) && !timerStarted) {
       timerReady = false;
       this.countdownTimer++;
+      this.heldTime = millis();
       if (this.countdownTimer <= 35) { // fill red if space is pressed but not held for long enough.
         document.getElementById("timer").style.color = "#ff1900";
       }
       else { // fill green when the timer is ready to be started.
         document.getElementById("timer").style.color = "#04DD04";
+        document.getElementById("timer").innerHTML = "0:00.00";
         timerReady = true; // set the timerReady variable to true.
       }
     }
@@ -370,18 +378,15 @@ class Cube {
   }
 
   // start the timer.
+  // main code for the timer inspired by https://editor.p5js.org/hanxyn888@gmail.com/sketches/ir8PEq3L2
   startTimer() {
     resetMatrix();
     rotateY(180);
     timerStarted = !timerStarted; // switch the state of the timerStarted variable.
     if (timerStarted && timerReady) { // if timerStarted and timerReady are true, update the currentTime.
-      this.currentTime = ((millis() - this.startMillis) / 1000).toFixed(2);
+      this.currentTime = ((millis() - this.startMillis)) - 600;
     }
-    push();
-    fill(0);
-    translate(0, -400, 0);
     document.getElementById("timer").style.color = "black";
-    pop();
   }
 }
 
@@ -397,5 +402,14 @@ function keyPressed() {
   }
   if (key === "e") { // reset camera position when "e" is pressed.
     camera(400, -400, 400, 0, 0, 0, 0, 1, 0);
+  }
+  if (key === "i") {
+    instructionsHidden = !instructionsHidden;
+    if (instructionsHidden) {
+      document.getElementById("instructions").hidden = true;
+    }
+    else {
+      document.getElementById("instructions").hidden = false;
+    }
   }
 }
